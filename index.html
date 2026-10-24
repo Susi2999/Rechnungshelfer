@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="de">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="theme-color" content="#164d43">
+ <meta name="description" content="Dein Übungsbegleiter für Schnittberechnungen und Zeitspanungsvolumen. Rechne selbst, schlage nach und prüfe deine Schritte.">
+ <title>Rechenlotse · Dein Übungsbegleiter</title>
+ <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23164d43'/%3E%3Cpath d='m18 44 12-27 7 15 11-6-12 22-7-16z' fill='%23d7efb0'/%3E%3C/svg%3E">
+ <style>@layer base, layout, components, responsive;
+@layer base {
+ :root { --ink:#183d35; --muted:#65726a; --green:#164d43; --green-hover:#0b3b32; --lime:#d9edbc; --paper:#f6f6f0; --line:#dde3d8; --white:#fffefa; --orange:#b55d2c; --orange-bg:#fff3e7; --radius:22px; --shadow:0 16px 45px #203d2910; font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-synthesis:none; color:var(--ink); background:var(--paper); }
+ * { box-sizing:border-box; }
+ body { margin:0; min-width:320px; font-size:15px; line-height:1.6; }
+ button,input,select { font:inherit; }
+ button,a,input,select { -webkit-tap-highlight-color:transparent; }
+ button { cursor:pointer; }
+ button { color:inherit; }
+ a { color:inherit; text-decoration:none; }
+ button:disabled { cursor:default; opacity:.55; }
+ button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible { outline:3px solid #9fba67; outline-offset:4px; }
+ h1,h2,h3,p { margin:0; }
+ h1,h2,h3 { line-height:1.18; }
+ svg { display:block; }
+ [hidden] { display:none!important; }
+ .skip-link { position:fixed; top:-100px; left:16px; z-index:100; padding:12px 20px; background:var(--green); color:white; border-radius:8px; }
+ .skip-link:focus { top:12px; }
+ .eyebrow { font-size:11px; font-weight:750; letter-spacing:1.8px; text-transform:uppercase; }
+ .serif { font-family:Georgia,"Times New Roman",serif; font-weight:400; }
+ .math { font-family:Georgia,"Times New Roman",serif; font-size:19px; line-height:1.8; }
+ math { font-family:"STIX Two Math","Cambria Math","Latin Modern Math",math; font-style:normal; }
+ p math,.fact math { font-size:1.08em; }
+ sub { font-size:.7em; }
+}
+@layer layout {
+ .site-header { background:var(--paper); border-bottom:1px solid var(--line); }
+ .header-inner { max-width:1320px; margin:auto; min-height:92px; padding:16px 48px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+ .brand { display:flex; gap:11px; align-items:center; line-height:1.1; font-size:24px; font-weight:720; letter-spacing:-1px; }
+ .brand-light { font-weight:400; }
+ .brand small { display:block; margin-top:7px; font-size:8px; letter-spacing:1.8px; font-weight:600; color:var(--muted); }
+ .brand-icon { display:grid; place-items:center; width:43px; height:43px; border-radius:14px; background:var(--green); }
+ .brand-icon svg { width:31px; fill:var(--lime); }
+ .header-actions { display:flex; align-items:center; gap:22px; }
+ .save-status { font-size:11px; color:var(--muted); display:flex; align-items:center; gap:7px; }
+ .save-status>span { width:6px; height:6px; background:#7b9d6f; border-radius:50%; }
+ main { min-height:calc(100vh - 183px); outline:none; }
+ .page-width { max-width:1224px; margin:auto; padding:0 48px; }
+ .site-footer { max-width:1320px; margin:64px auto 0; padding:26px 48px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:16px; color:var(--muted); font-size:11px; }
+ .footer-brand { font-size:15px; font-weight:650; color:var(--ink); }
+ .hero { max-width:1320px; margin:auto; padding:66px 48px 58px; display:grid; grid-template-columns:1.1fr .9fr; gap:50px; align-items:center; }
+ .hero-copy { padding-left:0; }
+ .hero .eyebrow { display:flex; gap:9px; align-items:center; color:var(--green); }
+ .small-square { width:7px; height:7px; display:inline-block; background:#91ad6a; }
+ .hero h1 { margin:24px 0 22px; font-family:Georgia,"Times New Roman",serif; font-size:clamp(44px,5.1vw,67px); font-weight:400; letter-spacing:-2.8px; line-height:1.06; }
+ .hero h1 em { color:#6b8653; font-style:italic; }
+ .hero-description { max-width:440px; color:var(--muted); font-size:15px; line-height:1.8; }
+ .hero-actions { display:flex; align-items:center; gap:24px; margin-top:29px; }
+ .tools-note { margin-top:28px; display:flex; align-items:center; gap:9px; color:var(--muted); font-size:11px; }
+ .tools-note svg { width:17px; height:17px; }
+ .hero-art { position:relative; min-height:350px; border:1px solid #dce3d0; border-radius:32px; background:#e7eddc; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+ .hero-art::before { content:""; position:absolute; inset:0; background-image:linear-gradient(#64825b12 1px,transparent 1px),linear-gradient(90deg,#64825b12 1px,transparent 1px); background-size:24px 24px; }
+ .art-kicker { position:absolute; top:25px; left:26px; color:#637b52; z-index:1; }
+ .art-no { position:absolute; right:26px; top:22px; color:#6a805a; font:italic 16px Georgia,serif; }
+ .art-object { width:260px; height:260px; position:relative; }
+ .art-object svg { width:100%; height:100%; filter:drop-shadow(0 12px 12px #31563b17); }
+ .art-label { position:absolute; background:var(--white); box-shadow:0 7px 15px #2545280a; border:1px solid #e0e5d7; border-radius:11px; display:flex; gap:10px; align-items:center; padding:11px 16px; font-size:12px; z-index:2; }
+ .art-label span { color:#7e9666; font-family:Georgia,serif; font-size:17px; }
+ .art-label.top { right:22px; top:87px; transform:rotate(4deg); }
+ .art-label.bottom { left:22px; bottom:42px; transform:rotate(-4deg); }
+ .art-caption { position:absolute; bottom:19px; right:23px; color:#6b7e59; font-size:9px; letter-spacing:1.2px; }
+ .tasks-section { max-width:1320px; padding:0 48px; margin:auto; scroll-margin-top:24px; }
+ .section-title-row { display:flex; justify-content:space-between; align-items:end; gap:18px; margin-bottom:22px; }
+ .section-title-row h2 { margin-top:8px; font-family:Georgia,serif; font-size:32px; font-weight:400; letter-spacing:-.7px; }
+ .section-note { color:var(--muted); font-size:12px; }
+ .filters { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:24px; }
+ .task-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:17px; }
+ .task-card { min-height:272px; background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:23px 24px 18px; transition:transform .2s,box-shadow .2s,border-color .2s; display:flex; flex-direction:column; position:relative; }
+ .task-card:hover { transform:translateY(-4px); box-shadow:var(--shadow); border-color:#b8c9ac; }
+ .card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:23px; }
+ .task-symbol { width:43px; height:43px; border-radius:12px; background:#edf1e5; display:grid; place-items:center; color:#496c50; }
+ .task-symbol svg { width:28px; height:28px; }
+ .card-identity { text-align:right; }
+ .card-identity .eyebrow { font-size:9px; letter-spacing:1.2px; color:var(--muted); }
+ .card-identity strong { display:block; font-size:13px; font-weight:650; }
+ .task-card h3 { font-family:Georgia,serif; font-size:25px; font-weight:400; letter-spacing:-.5px; margin-bottom:9px; }
+ .task-card p { color:var(--muted); font-size:12px; margin-bottom:15px; }
+ .card-material { display:inline-flex; width:fit-content; align-items:center; padding:3px 9px; border-radius:5px; background:#f0f1eb; font-size:10px; color:#647060; margin-bottom:23px; }
+ .card-bottom { display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e9ece2; padding-top:14px; margin-top:auto; }
+ .card-progress { font-size:10px; color:var(--muted); }
+ .card-link { font-weight:650; font-size:12px; display:flex; align-items:center; gap:10px; }
+ .card-link::after { content:""; position:absolute; inset:0; border-radius:var(--radius); }
+ .tiny-arrow { font-size:19px; font-weight:400; line-height:1; }
+ .work-layout { max-width:1320px; margin:0 auto; display:grid; grid-template-columns:253px minmax(0,1fr); padding:32px 48px 0; gap:35px; }
+ .work-sidebar { padding-right:22px; border-right:1px solid var(--line); }
+ .back-link { display:flex; gap:9px; align-items:center; font-size:12px; font-weight:600; margin:0 0 29px; }
+ .sidebar-label { color:var(--muted); margin:20px 0 10px 9px; font-size:9px; letter-spacing:1.5px; }
+ .sidebar-task { display:flex; padding:11px 10px; gap:11px; align-items:center; border-radius:11px; font-size:11px; margin:3px 0; }
+ .sidebar-task:hover { background:#ecf0e6; }
+ .sidebar-task.active { background:#e4ecd8; color:#214e37; }
+ .sidebar-num { width:26px; height:26px; border:1px solid #d7dfce; border-radius:7px; display:grid; place-items:center; font-size:10px; flex-shrink:0; }
+ .sidebar-task.active .sidebar-num { color:white; border-color:var(--green); background:var(--green); }
+ .sidebar-task strong { display:block; font-weight:650; font-size:11px; }
+ .sidebar-task small { color:var(--muted); font-size:9px; }
+ .sidebar-check { margin-left:auto; color:var(--green); }
+ .sidebar-note { margin:30px 8px 0; font-size:11px; color:var(--muted); line-height:1.8; }
+ .sidebar-note svg { width:23px; margin-bottom:9px; }
+ .work-main { min-width:0; }
+ .work-top { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+ .work-kicker { font-size:10px; color:var(--muted); letter-spacing:1px; }
+ .work-main h1 { font:400 39px/1.15 Georgia,serif; letter-spacing:-1px; margin:8px 0 10px; }
+ .work-subtitle { color:var(--muted); font-size:12px; }
+ .work-progress { min-width:100px; text-align:right; padding-top:4px; }
+ .work-progress strong { display:block; font-family:Georgia,serif; font-size:27px; line-height:1.2; font-weight:400; }
+ .work-progress small { color:var(--muted); font-size:9px; }
+ .progress-line { margin-top:7px; height:4px; background:#e0e5d6; border-radius:5px; overflow:hidden; }
+ .progress-line span { background:#6b8c4f; height:100%; display:block; border-radius:5px; transition:width .2s; }
+ .given { margin-top:24px; background:#ecefe4; border:1px solid #e0e5d6; border-radius:13px; padding:12px 17px; }
+ .given summary { list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; }
+ .given summary::-webkit-details-marker { display:none; }
+ .given summary::after { content:"+"; font-size:20px; font-weight:400; }
+ .given[open] summary::after { content:"−"; }
+ .given p { font-size:12px; color:var(--muted); margin:12px 0; }
+ .fact-list { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0 3px; }
+ .fact { font-size:11px; border:1px solid #dce2d0; border-radius:6px; background:#f8f9f2; padding:4px 9px; }
+ .step-nav { margin:24px 0; display:flex; gap:7px; flex-wrap:wrap; }
+ .step-panel { background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:27px; }
+ .step-head { padding-bottom:23px; margin-bottom:24px; border-bottom:1px solid #e8ebdf; }
+ .step-head .eyebrow { color:#7b8d65; font-size:9px; }
+ .step-head h2 { font-family:Georgia,serif; font-size:29px; font-weight:400; margin:9px 0; letter-spacing:-.6px; }
+ .step-head p { font-size:12px; color:var(--muted); }
+ .step-columns { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.15fr); gap:30px; }
+ .hint-side { border-right:1px solid #e8ebdf; padding-right:26px; }
+ .side-heading { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:650; margin-bottom:17px; }
+ .side-heading svg { width:18px; height:18px; }
+ .hint-intro { font-size:12px; color:var(--muted); line-height:1.8; margin-bottom:21px; }
+ .hint-item { padding:0 0 20px 15px; margin-left:7px; border-left:1px solid #dce5cb; position:relative; }
+ .hint-item::before { content:""; width:5px; height:5px; border-radius:50%; background:#89a460; position:absolute; top:6px; left:-3px; }
+ .hint-step { font-size:9px; color:#7a8a68; text-transform:uppercase; letter-spacing:1px; }
+ .hint-item h3 { font-size:12px; font-weight:650; margin:5px 0 8px; line-height:1.5; }
+ .hint-item p { font-size:12px; color:var(--muted); line-height:1.85; }
+ .formula-stack { display:grid; grid-template-columns:minmax(0,1fr); gap:12px; margin-top:17px; }
+ .formula-equation { min-width:0; padding:14px 15px 17px; border:1px solid #e0e7d5; border-radius:11px; background:#f4f7ed; }
+ .equation-label { display:block; font:600 10px/1.6 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#697d55; margin-bottom:13px; }
+ .equation-math { min-width:0; max-width:100%; overflow-x:auto; overflow-y:hidden; padding:3px 0; scrollbar-width:thin; scrollbar-color:#afbf98 transparent; color:#244938; }
+ .equation-math math { font-size:22px; width:max-content; margin:0; text-align:left; }
+ .teacher-note { font-size:11px; line-height:1.8; color:var(--muted); margin-top:15px; }
+ .student-note { padding:12px 0 0; font-size:10px; line-height:1.7; color:var(--muted); }
+ .field-row { padding:0 0 17px; margin-bottom:17px; border-bottom:1px solid #ebede5; }
+ .field-row:last-of-type { margin-bottom:0; }
+ .field-label { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+ .field-label label { font-size:11px; font-weight:600; }
+ .field-symbol { color:#6c8253; font:italic 17px Georgia,serif; white-space:nowrap; }
+ .field-symbol math { font-size:19px; }
+ .input-group { display:flex; align-items:stretch; gap:7px; }
+ .value-input { min-width:0; width:100%; height:45px; padding:9px 12px; color:var(--ink); background:#fcfcf8; border:1px solid #d7dfcf; border-radius:8px; font-size:15px; font-variant-numeric:tabular-nums; transition:border-color .15s; }
+ .value-input::placeholder { color:#9aA294; font-size:11px; }
+ .value-input:focus { border-color:#759254; outline-offset:1px; }
+ .unit-select { width:119px; flex-shrink:0; border:1px solid #d7dfcf; border-radius:8px; padding:7px 8px; background:#f0f3e9; color:#5c6b51; font-size:11px; }
+ .choice-select { width:100%; height:45px; border:1px solid #d7dfcf; border-radius:8px; background:#fcfcf8; padding:8px 12px; color:var(--ink); font-size:12px; }
+ .field-result { font-size:11px; line-height:1.7; display:flex; align-items:flex-start; gap:6px; margin-top:7px; }
+ .field-result .result-icon { flex:0 0 13px; font-size:11px; }
+ .field-result.success { color:#3e7249; }
+ .field-result.notice { color:#9a572d; }
+ .field-result.neutral { color:var(--muted); }
+ .field-row.is-success .value-input,.field-row.is-success .choice-select { border-color:#9ab58b; background:#f6faf0; }
+ .field-row.is-notice .value-input,.field-row.is-notice .choice-select { border-color:#cba88b; background:#fffbf6; }
+ .check-button { width:100%; margin-top:21px; }
+ .form-help { font-size:9px; color:var(--muted); text-align:center; line-height:1.8; margin-top:9px; }
+ .form-summary { padding:10px 12px; margin-top:17px; border-radius:9px; font-size:11px; line-height:1.7; background:#eef4e5; color:#3c683d; }
+ .form-summary.notice { background:var(--orange-bg); color:#90542b; }
+ .step-bottom { margin:22px 0 0; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+ .step-position { font-size:10px; color:var(--muted); }
+ .step-controls { display:flex; gap:8px; }
+ .completion-note { margin:22px 0 0; padding:17px 20px; background:#e5eed8; border-radius:13px; font-size:12px; line-height:1.8; }
+ .mobile-back { display:none; }
+}
+@layer components {
+ .button { border:1px solid transparent; border-radius:10px; padding:12px 19px; display:inline-flex; align-items:center; justify-content:center; gap:16px; font-size:12px; font-weight:650; line-height:1.5; min-height:44px; transition:background .15s,transform .15s; }
+ .button:hover { transform:translateY(-1px); }
+ .button-primary { background:var(--green); color:#fff; }
+ .button-primary:hover { background:var(--green-hover); }
+ .button-secondary { background:#eff3e6; color:var(--green); border-color:#d6e0ca; }
+ .button-secondary:hover { background:#e2ecd4; }
+ .button-plain { background:transparent; color:var(--green); border-color:var(--line); }
+ .button-plain:hover { background:#edf1e5; }
+ .button svg { width:17px; height:17px; }
+ .text-button { background:none; border:none; padding:8px 0; font-size:11px; font-weight:600; }
+ .text-button:hover { color:#6b8653; }
+ .text-link { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:600; }
+ .icon-button { border:1px solid #d6decb; background:transparent; min-width:34px; height:34px; border-radius:50%; font-size:16px; display:grid; place-items:center; }
+ .icon-button:hover { background:#e7eddb; }
+ .filter { border:1px solid #dae1d2; background:transparent; border-radius:8px; min-height:38px; padding:8px 16px; font-size:11px; }
+ .filter:hover { background:#edf1e6; }
+ .filter.active { background:var(--green); color:white; border-color:var(--green); }
+ .filter-count { opacity:.7; padding-left:8px; font-size:9px; }
+ .step-tab { border:1px solid #d8e0cf; background:transparent; padding:8px 12px; border-radius:8px; font-size:10px; min-height:36px; display:flex; align-items:center; gap:5px; }
+ .step-tab:hover { background:#edf2e5; }
+ .step-tab.active { border-color:var(--green); color:white; background:var(--green); }
+ .step-tab.done:not(.active) { background:#eaf2df; border-color:#ccdbba; }
+ .step-tab .done-mark { font-size:10px; }
+ dialog { border:1px solid #dfe5d7; border-radius:24px; padding:28px 32px 32px; max-width:520px; width:calc(100% - 36px); color:var(--ink); box-shadow:0 25px 100px #0f34262e; background:var(--white); }
+ dialog::backdrop { background:#123a2e73; backdrop-filter:blur(3px); }
+ .dialog-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; color:var(--muted); }
+ dialog h2 { font:400 30px/1.25 Georgia,serif; letter-spacing:-.6px; margin:10px 0 18px; }
+ dialog p { margin-top:12px; color:var(--muted); font-size:13px; line-height:1.9; }
+ .how-list { padding:0; margin:25px 0; list-style:none; counter-reset:how; }
+ .how-list li { display:flex; gap:14px; margin:20px 0; font-size:12px; color:var(--muted); }
+ .how-list li::before { counter-increment:how; content:counter(how); flex-shrink:0; width:29px; height:29px; background:#e9f0df; border-radius:8px; color:#51713e; display:grid; place-items:center; }
+ .how-list strong { display:block; color:var(--ink); font-size:13px; margin-bottom:3px; }
+ .dialog-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; }
+ .toast { position:fixed; z-index:40; bottom:20px; left:50%; transform:translate(-50%,20px); opacity:0; pointer-events:none; background:var(--green); color:white; font-size:12px; line-height:1.7; border-radius:12px; padding:12px 20px; box-shadow:var(--shadow); max-width:90%; transition:opacity .2s,transform .2s; }
+ .toast.show { transform:translate(-50%,0); opacity:1; }
+}
+@layer responsive {
+ @media(min-width:1400px) { .hero { padding-top:80px; padding-bottom:70px; } .hero-art { min-height:370px; } }
+ @media(max-width:1100px) { .header-inner,.hero,.tasks-section { padding-left:30px; padding-right:30px; } .hero { gap:30px; } .hero h1 { font-size:56px; } .work-layout { padding-left:28px; padding-right:28px; grid-template-columns:195px minmax(0,1fr); gap:24px; } .work-sidebar { padding-right:14px; } .step-columns { grid-template-columns:1fr; gap:28px; } .hint-side { border-right:0; border-bottom:1px solid #e8ebdf; padding:0 0 24px; } .hint-intro { margin-bottom:14px; } .task-grid { gap:13px; } .task-card { padding:20px; } .site-footer { padding-left:30px; padding-right:30px; } }
+ @media(max-width:760px) { .header-inner { min-height:78px; padding:15px 22px; } .brand { font-size:21px; } .brand-icon { width:37px; height:37px; border-radius:12px; } .brand small { font-size:7px; letter-spacing:1.4px; } .header-actions { gap:15px; } .save-status { display:none; } .reset-button { font-size:10px; } .hero { padding:43px 24px 40px; grid-template-columns:1fr 1fr; gap:20px; } .hero h1 { font-size:45px; letter-spacing:-1.9px; } .hero-description { font-size:12px; } .hero-art { min-height:285px; border-radius:24px; } .art-object { width:210px; height:210px; } .art-label { padding:8px 11px; font-size:10px; } .art-label.top { right:10px; top:78px; } .art-label.bottom { left:10px; bottom:35px; } .art-caption { font-size:7px; bottom:14px; } .art-kicker { left:18px; top:18px; font-size:8px; } .art-no { font-size:13px; top:15px; right:18px; } .hero-actions { gap:14px; margin-top:22px; } .hero-actions .button { padding:11px 14px; font-size:11px; } .hero-actions .text-link { font-size:10px; } .tools-note { font-size:9px; margin-top:20px; } .tasks-section { padding:0 24px; } .task-grid { grid-template-columns:repeat(2,1fr); } .section-note { display:none; } .work-layout { padding:23px 24px 0; grid-template-columns:1fr; } .work-sidebar { display:none; } .mobile-back { display:flex; margin-bottom:21px; } .work-main h1 { font-size:34px; } .work-progress strong { font-size:24px; } .step-columns { grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:24px; } .hint-side { border-right:1px solid #e8ebdf; border-bottom:0; padding:0 20px 0 0; } .step-panel { padding:22px; } .site-footer { margin-top:44px; padding:22px 24px; flex-wrap:wrap; } .site-footer>span:nth-child(2) { display:none; } }
+ @media(max-width:540px) { body { font-size:14px; } .hero { grid-template-columns:1fr; padding:35px 22px 32px; gap:28px; } .hero .eyebrow { font-size:9px; } .hero h1 { font-size:50px; margin:20px 0 18px; letter-spacing:-2px; } .hero-description { font-size:13px; max-width:340px; } .hero-actions { gap:20px; } .hero-actions .button { padding:12px 19px; font-size:12px; } .hero-actions .text-link { font-size:11px; } .tools-note { font-size:10px; } .hero-art { min-height:232px; } .art-object { width:212px; height:212px; } .art-label.top { right:20px; top:58px; } .art-label.bottom { left:20px; bottom:29px; } .art-kicker { top:21px; left:22px; } .art-no { top:17px; right:22px; } .art-caption { right:21px; bottom:15px; } .tasks-section { padding:0 22px; } .section-title-row { margin-bottom:19px; } .section-title-row h2 { font-size:29px; } .section-title-row .eyebrow { font-size:9px; } .filters { gap:6px; margin-bottom:19px; } .filter { padding:8px 11px; font-size:10px; min-height:36px; } .filter-count { padding-left:5px; } .task-grid { grid-template-columns:1fr; gap:13px; } .task-card { min-height:233px; padding:20px 22px 16px; } .card-top { margin-bottom:16px; } .task-card h3 { font-size:26px; } .card-material { margin-bottom:17px; } .task-card p { font-size:12px; } .card-identity strong { font-size:12px; } .work-layout { padding:22px 17px 0; } .work-main h1 { font-size:32px; } .work-progress { min-width:73px; } .work-progress strong { font-size:22px; } .work-kicker { font-size:8px; letter-spacing:.7px; } .work-subtitle { font-size:11px; max-width:250px; } .given { margin-top:19px; padding:11px 13px; } .given summary { font-size:11px; } .given p { font-size:11px; } .fact { font-size:10px; } .step-nav { margin:18px 0; gap:5px; } .step-tab { padding:7px 10px; font-size:10px; } .step-panel { padding:21px 18px; border-radius:18px; } .step-head { padding-bottom:18px; margin-bottom:20px; } .step-head h2 { font-size:26px; margin:9px 0; } .step-head p { font-size:11px; line-height:1.8; } .step-columns { display:flex; flex-direction:column-reverse; gap:26px; } .hint-side { border-right:0; border-top:1px solid #e8ebdf; padding:22px 0 0; } .hint-intro { font-size:11px; margin-bottom:14px; } .side-heading { margin-bottom:14px; } .hint-item p { font-size:11px; } .value-input { height:48px; font-size:16px; } .unit-select { width:118px; height:48px; } .choice-select { height:48px; font-size:13px; } .field-row { padding-bottom:16px; margin-bottom:16px; } .field-label label { font-size:11px; } .check-button { min-height:48px; margin-top:19px; } .hint-button { width:100%; } .step-bottom { align-items:flex-start; } .step-controls { gap:6px; } .step-controls .button { font-size:11px; padding:9px 12px; } .step-position { font-size:9px; max-width:90px; padding-top:9px; } .site-footer { margin-top:35px; padding:22px; font-size:10px; } dialog { padding:22px 24px 26px; } }
+ @media(max-width:540px) { .hint-item p { font-size:13px; } .hint-intro { font-size:12px; } .teacher-note { font-size:12px; } .student-note { font-size:11px; } .field-result { font-size:12px; } .field-label label { font-size:12px; } .unit-select { font-size:12px; } .form-summary { font-size:12px; } .form-help { font-size:10px; } }
+ @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+}
+</style>
+</head>
+<body>
+ <a class="skip-link" href="#main">Zum Inhalt</a>
+ <header class="site-header">
+  <div class="header-inner">
+   <a href="#" class="brand" aria-label="Rechenlotse – Aufgabenübersicht"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="m7 25 8-19 5 11 7-4-8 15-5-12z"/></svg></span><span>rechen<span class="brand-light">lotse</span><small>DEIN ÜBUNGSBEGLEITER</small></span></a>
+   <div class="header-actions"><span class="save-status" id="save-status"><span></span>Bereit zum Üben</span><button type="button" class="icon-button" id="help-button" aria-label="So funktioniert der Rechenlotse"><span aria-hidden="true">?</span></button><button type="button" class="text-button reset-button" id="reset-button">Neu beginnen</button></div>
+  </div>
+ </header>
+ <main id="main" tabindex="-1"></main>
+ <footer class="site-footer"><span class="footer-brand">rechenlotse</span><span>Dein Blatt. Dein Rechenweg. Dein Tempo.</span><button class="text-button" id="privacy-button" type="button">Arbeitsstand & Datenschutz</button></footer>
+ <dialog id="info-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span class="eyebrow">GUT ZU WISSEN</span><button class="icon-button dialog-close" aria-label="Fenster schließen" type="button">×</button></div><div id="dialog-content"></div></dialog>
+ <div class="toast" role="status" id="toast"></div>
+ <script type="module">const sin = a => Math.sin(a * Math.PI / 180);
+const f = (id, label, symbol, kind, expected, extra = {}) => ({ id, label, symbol, kind, expected, ...extra });
+const s = (id, title, description, fields, hints) => ({ id, title, description, fields, hints });
+const hint = (title, text, formula = '') => ({ title, text, formula });
+const crossHints = [hint('Was beschreibt der Span?', 'Unterscheide die Fläche des Spanungsquerschnitts von der Spanungsdicke. Sammle zuerst die passenden Größen.'), hint('Die Bearbeitungsart zählt', 'Suche im Tabellenbuch die Beziehungen für diese Bearbeitungsart. Achte darauf, ob eine Größe je Schneide gilt.'), hint('Den Ansatz ordnen', 'Setze erst auf deinem Blatt ein. Prüfe die Einheiten und lasse Zwischenwerte zum Weiterrechnen stehen.')];
+const kcHints = [hint('Werkstoff und Spanungsdicke', 'Für die spezifische Schnittkraft brauchst du die Spanungsdicke und die Kennwerte des Werkstoffs.'), hint('Im Tabellenbuch nachschlagen', 'Suche unter „Spezifische Schnittkraft“ nach der passenden Werkstoffzeile. Lies k_c1.1 und m_c aus den richtigen Spalten ab. In der 50. Auflage beginnt der Abschnitt auf Seite 335.'), hint('Mit deinem Zwischenwert rechnen', 'Verwende die Spanungsdicke aus deinem vorherigen Schritt. Achte beim Taschenrechner auf die Potenz und die Klammern.', 'k_c = k_c1.1 / h^m_c')];
+const powerHints = [hint('Kraft mal Geschwindigkeit', 'Welche Schnittkraft gehört zu diesem Schritt? Prüfe zuerst die Bearbeitungsart und die Einheit der Schnittgeschwindigkeit.'), hint('Minuten und Sekunden', 'Für eine Leistung in Watt muss die Geschwindigkeit in Meter je Sekunde eingesetzt werden. Prüfe außerdem den Unterschied zwischen Watt und Kilowatt.'), hint('Die Einheiten zusammenführen', 'Rechne die Geschwindigkeit durch Teilen durch 60 in m/s um. Mit Kraft in N ergibt das Produkt eine Leistung in W. Für kW teilst du anschließend durch 1000.', 'P_c = F_c · v_c')];
+const driveHints = [hint('Verluste berücksichtigen', 'Die Antriebsleistung muss auch die Verluste abdecken. Ist dein Ergebnis dazu plausibel?'), hint('Prozent richtig einsetzen', 'Schreibe den Wirkungsgrad für die Rechnung als Dezimalzahl. Die Prozentangabe wird dafür durch 100 geteilt.'), hint('Die passende Beziehung', 'Nutze deine eigene Schnittleistung aus dem vorherigen Schritt. Die Leistungseinheit bleibt bei dieser Rechnung erhalten.', 'P₁ = P_c / η')];
+const cutterHints = [hint('Welche Schneiden greifen ein?', 'Die gesamte Schneidenzahl und die mittlere Zahl der Schneiden im Eingriff sind verschiedene Größen.'), hint('Zeichnung und Tabellenbuch', 'Lies die Schnittbreite aus der Zeichnung. Bestimme mit Fräserdurchmesser und Schnittbreite den Eingriffswinkel anhand der Beziehung oder des Diagramms aus dem Unterricht.'), hint('Ein Anteil der Umdrehung', 'Berechne den Anteil des Eingriffswinkels an einer vollständigen Umdrehung. Multipliziere mit der Schneidenzahl. Eine mittlere Schneidenzahl darf Nachkommastellen haben.', 'z_e = z · φ / 360°')];
+const rpmHints = [hint('Weg pro Umdrehung', 'Welche Strecke wird am Umfang in einer Umdrehung zurückgelegt? Achte auf den Durchmesser, auf den sich die Schnittgeschwindigkeit bezieht.'), hint('Meter und Millimeter', 'Durchmesser in mm und Schnittgeschwindigkeit in m/min benötigen einen passenden Umrechnungsfaktor.'), hint('Die Drehzahl bestimmen', 'Der Faktor im Zähler berücksichtigt Meter und Millimeter. Rechne auf deinem Blatt und prüfe die Einheit.', 'n = (v_c · 1000) / (π · d)')];
+const material = (kc, mc) => [f('kc11', 'Grundwert aus dem Tabellenbuch', 'k_c1.1', 'specific', () => kc, { exact: true, table: true }), f('mc', 'Exponent aus dem Tabellenbuch', 'm_c', 'ratio', () => mc, { exact: true, table: true })];
+const factors = hss => [f('cw', 'Faktor für den Schneidstoff', 'C_W', 'ratio', () => hss ? 1.2 : 1, { exact: true, table: true }), f('cs', 'Faktor für den Schneidenzustand', 'C_S', 'ratio', () => 1.3, { exact: true, table: true })];
+const forceHints = [hint('Querschnitt und Werkstoff', 'Die Schnittkraft hängt vom Spanungsquerschnitt und der spezifischen Schnittkraft ab.'), hint('Den Schneidenzustand beachten', 'Schlage die Korrekturfaktoren für Schneidstoff und Schneidenzustand nach. Verwechsle die Faktoren nicht mit dem Wirkungsgrad.'), hint('Alle Faktoren zuordnen', 'Verwende deine Zwischenwerte. Beim Bohren ist die hier geprüfte Kraft die Kraft je Hauptschneide.', 'F_c = A · k_c · C_W · C_S')];
+const K = (g, h) => g('kc11') / Math.pow(g(h), g('mc'));
+const F = g => g('A') * g('kc') * g('cw') * g('cs');
+const drillSteps = (boring = false) => [
+ s('a', 'Spanungsquerschnitt & Spanungsdicke', 'Prüfe hier die Größen je Hauptschneide.', [
+  f('A', 'Spanungsquerschnitt je Hauptschneide', 'A', 'area', () => boring ? (20 - 8) * .4 / 4 : 14 * .4 / 4),
+  f('h', 'Spanungsdicke', 'h', 'lengthSmall', () => .4 / 2 * sin(118 / 2))
+ ], [hint('Die Hauptschneiden beachten', 'Der Vorschub je Umdrehung verteilt sich auf die Hauptschneiden. Lies den benötigten Durchmesser aus der Aufgabe beziehungsweise Zeichnung.'), hint('Den Spitzenwinkel zuordnen', 'Für die Spanungsdicke benötigst du den halben Spitzenwinkel. Beim Aufbohren wird nur der zusätzlich abgetragene Bereich berücksichtigt.'), hint('Passende Beziehungen', 'A gilt hier je Hauptschneide. Stelle deinen Taschenrechner für den Winkel auf Grad.', boring ? 'A = (d − d₁) · f / 4     h = (f / 2) · sin(σ / 2)' : 'A = d · f / 4     h = (f / 2) · sin(σ / 2)')]),
+ s(boring ? 'b1' : 'b', 'Spezifische Schnittkraft', 'Schlage die Kennwerte nach und verwende deine Spanungsdicke.', [...material(boring ? 2500 : 950, boring ? .26 : .21), f('kc', 'Spezifische Schnittkraft', 'k_c', 'specific', g => K(g, 'h'))], kcHints),
+ s(boring ? 'b2' : 'c', 'Schnittkraft je Hauptschneide', 'Berücksichtige Schneidstoff und abgestumpfte Schneide.', [...factors(true), f('Fc', 'Schnittkraft je Hauptschneide', 'F_c', 'force', F)], forceHints),
+ s(boring ? 'b3' : 'd', 'Schnittleistung', 'Nutze den im Unterricht vereinbarten Ansatz wie beim Vollbohren.', [f('vms', 'Schnittgeschwindigkeit in m/s', 'v_c', 'speedSI', () => (boring ? 18 : 22) / 60), f('Pc', 'Schnittleistung', 'P_c', 'power', g => g('Fc') * g('vms') / 1000)], powerHints),
+ s(boring ? 'c' : 'e', 'Antriebsleistung', 'Prüfe den Wirkungsgrad und deine Leistungseinheit.', [f('eta', 'Wirkungsgrad', 'η', 'efficiency', () => boring ? .75 : .8, { exact: true }), f('P1', 'Antriebsleistung', 'P₁', 'power', g => g('Pc') / g('eta'))], driveHints)
+];
+
+const tasks = [
+ { id: 'schnitt-1', number: '01', sheet: 'schnitt', label: 'Aufgabe 1', category: 'Drehen', material: 'E295', title: 'Längsdrehen', subtitle: 'Zwei Einstellwinkel vergleichen', icon: 'turn', given: 'Eine Welle aus E295 wird mit HM-Werkzeug geschruppt. Untersuche beide Einstellwinkel.', facts: ['v_c = 200 m/min', 'a_p = 5,5 mm', 'f = 0,3 mm/U', 'κ = 60° und 90°', 'η = 75 %'], steps: [
+  s('a', 'Spanungsquerschnitt & Spanungsdicke', 'Berechne den Querschnitt und die Spanungsdicke für beide Winkel.', [f('A', 'Spanungsquerschnitt', 'A', 'area', () => 5.5 * .3), f('h60', 'Spanungsdicke bei 60°', 'h₆₀', 'lengthSmall', () => .3 * sin(60)), f('h90', 'Spanungsdicke bei 90°', 'h₉₀', 'lengthSmall', () => .3 * sin(90))], [crossHints[0], hint('Den Winkel einbeziehen', 'Der Querschnitt ergibt sich aus Schnitttiefe und Vorschub. Für die Dicke benötigst du zusätzlich den Einstellwinkel.'), hint('Formeln zuordnen', 'Rechne die Spanungsdicke für jeden Winkel einzeln. Der Taschenrechner muss auf Grad stehen.', 'A = a_p · f     h = f · sin κ')]),
+  s('b', 'Spezifische Schnittkraft', 'Verwende die Kennwerte aus deinem Tabellenbuch.', [...material(1990, .26), f('kc60', 'Spezifische Schnittkraft bei 60°', 'k_c,60', 'specific', g => K(g, 'h60')), f('kc90', 'Spezifische Schnittkraft bei 90°', 'k_c,90', 'specific', g => K(g, 'h90'))], kcHints),
+  s('c1', 'Schnittkräfte als Zwischenschritt', 'Ordne jeder Spanungsdicke die passende spezifische Schnittkraft zu.', [f('Fc60', 'Schnittkraft bei 60°', 'F_c,60', 'force', g => g('A') * g('kc60')), f('Fc90', 'Schnittkraft bei 90°', 'F_c,90', 'force', g => g('A') * g('kc90'))], [forceHints[0], hint('Die Werte zusammenhalten', 'Verwende für jeden Winkel die zugehörige spezifische Schnittkraft.'), hint('Den Ansatz aufschreiben', 'Die Einheit des Querschnitts kürzt sich gegen die Flächeneinheit der spezifischen Schnittkraft.', 'F_c = A · k_c')]),
+  s('c2', 'Schnittleistungen', 'Prüfe die Umrechnung der Schnittgeschwindigkeit.', [f('vms', 'Schnittgeschwindigkeit in m/s', 'v_c', 'speedSI', () => 200 / 60), f('Pc60', 'Schnittleistung bei 60°', 'P_c,60', 'power', g => g('Fc60') * g('vms') / 1000), f('Pc90', 'Schnittleistung bei 90°', 'P_c,90', 'power', g => g('Fc90') * g('vms') / 1000)], powerHints),
+  s('d', 'Antriebsleistungen', 'Nutze jeweils deine Schnittleistung und den Wirkungsgrad.', [f('eta', 'Wirkungsgrad', 'η', 'efficiency', () => .75, { exact: true }), f('P160', 'Antriebsleistung bei 60°', 'P₁,60', 'power', g => g('Pc60') / g('eta')), f('P190', 'Antriebsleistung bei 90°', 'P₁,90', 'power', g => g('Pc90') / g('eta'))], driveHints),
+  s('e', 'Den Einfluss erklären', 'Vergleiche den Wechsel von 60° auf 90°.', [f('compareA', 'Der Spanungsquerschnitt wird …', 'A', 'choice', () => 'gleich', { options: [['größer', 'größer'], ['kleiner', 'kleiner'], ['gleich', 'bleibt gleich']] }), f('compareP', 'Die Antriebsleistung wird …', 'P₁', 'choice', () => 'kleiner', { options: [['größer', 'größer'], ['kleiner', 'kleiner'], ['gleich', 'bleibt gleich']] })], [hint('Deine Werte vergleichen', 'Vergleiche deine Ergebnisse für beide Winkel. Welche Größe hängt in ihrer Formel vom Einstellwinkel ab?'), hint('Den Zusammenhang verfolgen', 'Gehe gedanklich von der Spanungsdicke über die spezifische Schnittkraft bis zur Antriebsleistung.'), hint('Mit dem Rechenweg begründen', 'Beziehe deine Aussage auf den Vergleich der beiden Winkel dieser Aufgabe. Prüfe die entsprechenden Formeln in deinem Tabellenbuch.')])
+ ]},
+ { id: 'schnitt-3', number: '03', sheet: 'schnitt', label: 'Aufgabe 3', category: 'Drehen', material: 'GJL-150', title: 'Plandrehen', subtitle: 'Vom mittleren zum äußeren Durchmesser', icon: 'turn', given: 'Die Planfläche eines Kupplungsflansches wird mit HM-Werkzeug vorbearbeitet. Die Drehzahl wird über den mittleren Durchmesser bestimmt.', facts: ['v_c = 150 m/min', 'a_p = 5 mm', 'f = 0,4 mm/U', 'κ = 100°', 'd_a = 180 mm', 'd_i = 110 mm', 'η = 80 %'], steps: [
+  s('a', 'Spanungsquerschnitt & Spanungsdicke', 'Nutze den Einstellwinkel aus der Aufgabe.', [f('A', 'Spanungsquerschnitt', 'A', 'area', () => 5 * .4), f('h', 'Spanungsdicke', 'h', 'lengthSmall', () => .4 * sin(100))], [crossHints[0], hint('Den Einstellwinkel einsetzen', 'Die Spanungsdicke wird aus Vorschub und Einstellwinkel berechnet. Stelle den Taschenrechner auf Grad.'), hint('Die Beziehungen', 'Achte auf den Unterschied zwischen Querschnitt und Dicke.', 'A = a_p · f     h = f · sin κ')]),
+  s('b', 'Spezifische Schnittkraft', 'Schlage die Kennwerte für den Werkstoff nach.', [...material(950, .21), f('kc', 'Spezifische Schnittkraft', 'k_c', 'specific', g => K(g, 'h'))], kcHints),
+  s('c', 'Drehzahl', 'Verwende für die Drehzahl den mittleren Durchmesser.', [f('dm', 'Mittlerer Durchmesser', 'd_m', 'length', () => (180 + 110) / 2), f('n', 'Drehzahl', 'n', 'rpm', g => 150 * 1000 / (Math.PI * g('dm')))], [rpmHints[0], hint('Beide Durchmesser lesen', 'Ermittle den mittleren Durchmesser aus Innen- und Außendurchmesser.'), hint('Den Mittelwert verwenden', 'Berechne erst den mittleren Durchmesser und damit anschließend die Drehzahl.', 'd_m = (d_a + d_i) / 2     n = (v_c · 1000) / (π · d_m)')]),
+  s('d', 'Schnittgeschwindigkeit außen', 'Die Drehzahl bleibt gleich. Verwende nun den Außendurchmesser.', [f('va', 'Schnittgeschwindigkeit am Außendurchmesser', 'v_c,a', 'speed', g => Math.PI * 180 * g('n') / 1000)], [hint('Was bleibt gleich?', 'Nutze die bereits bestimmte Drehzahl. Lies den Außendurchmesser aus der Zeichnung.'), hint('Den Durchmesser wechseln', 'Die Schnittgeschwindigkeit ist bei gleicher Drehzahl vom betrachteten Durchmesser abhängig.'), hint('Die Geschwindigkeit berechnen', 'Bei Durchmesser in mm sorgt der Nenner für die Ausgabe in m/min.', 'v_c,a = π · d_a · n / 1000')]),
+  s('e', 'Antriebsleistung außen', 'Nutze die Schnittgeschwindigkeit am Außendurchmesser.', [f('Fc', 'Schnittkraft', 'F_c', 'force', g => g('A') * g('kc')), f('Pc', 'Schnittleistung außen', 'P_c', 'power', g => g('Fc') * g('va') / 60000), f('eta', 'Wirkungsgrad', 'η', 'efficiency', () => .8, { exact: true }), f('P1', 'Antriebsleistung außen', 'P₁', 'power', g => g('Pc') / g('eta'))], [powerHints[0], powerHints[1], hint('Die Schritte verbinden', 'Bestimme erst die Schnittkraft und die Schnittleistung außen. Berücksichtige dann den Wirkungsgrad.', 'F_c = A · k_c     P_c = F_c · v_c     P₁ = P_c / η')])
+ ]},
+ { id: 'schnitt-4', number: '04', sheet: 'schnitt', label: 'Aufgabe 4', category: 'Fräsen', material: 'S235JR', title: 'Bahnen vorfräsen', subtitle: 'Schneiden im Eingriff berücksichtigen', icon: 'mill', given: 'Die Bahnen eines geschweißten Grundkörpers werden vorgefräst. Verwende die Näherung für die Spanungsdicke aus dem Unterricht.', facts: ['v_c = 90 m/min', 'a_p = 6 mm', 'f_z = 0,1 mm', 'd = 275 mm', 'z = 10', 'a_e = 220 mm', 'η = 78 %'], steps: [
+  s('a', 'Spanungsdicke & Spanungsquerschnitt', 'Bestimme die Größen je Schneide.', [f('h', 'Spanungsdicke', 'h', 'lengthSmall', () => .1), f('A', 'Spanungsquerschnitt je Schneide', 'A', 'area', () => 6 * .1)], [crossHints[0], hint('Die Unterrichtsnäherung nutzen', 'Prüfe anhand des Verhältnisses von Fräserdurchmesser und Schnittbreite die verwendete Näherung für die Spanungsdicke.'), hint('Querschnitt je Schneide', 'Verwende den Vorschub je Schneide.', 'h ≈ f_z     A = a_p · f_z')]),
+  s('b', 'Spezifische Schnittkraft', 'Schlage die Kennwerte für den Werkstoff nach.', [...material(1780, .17), f('kc', 'Spezifische Schnittkraft', 'k_c', 'specific', g => K(g, 'h'))], kcHints),
+  s('c', 'Schnittkraft je Schneide', 'Die Schneide ist abgestumpft.', [...factors(false), f('Fc', 'Schnittkraft je Schneide', 'F_c', 'force', F)], forceHints),
+  s('d', 'Eingriffswinkel & Schneidenzahl', 'Nutze die Schnittbreite aus der Zeichnung.', [f('phi', 'Eingriffswinkel', 'φ', 'angle', () => 106, { alternatives: [106.2602], readTolerance: .6 }), f('ze', 'Mittlere Schneidenzahl im Eingriff', 'z_e', 'count', g => 10 * g('phi') / 360)], cutterHints),
+  s('e', 'Schnittleistung', 'Berücksichtige die mittlere Schneidenzahl im Eingriff.', [f('vms', 'Schnittgeschwindigkeit in m/s', 'v_c', 'speedSI', () => 90 / 60), f('Pc', 'Schnittleistung', 'P_c', 'power', g => g('ze') * g('Fc') * g('vms') / 1000)], [cutterHints[0], powerHints[1], hint('Alle beteiligten Schneiden', 'Verwende die Kraft je Schneide und deine mittlere Schneidenzahl im Eingriff. Die Geschwindigkeit muss zur Leistungseinheit passen.', 'P_c = z_e · F_c · v_c')]),
+  s('f', 'Antriebsleistung', 'Nutze deine eigene Schnittleistung.', [f('eta', 'Wirkungsgrad', 'η', 'efficiency', () => .78, { exact: true }), f('P1', 'Antriebsleistung', 'P₁', 'power', g => g('Pc') / g('eta'))], driveHints)
+ ]},
+ { id: 'schnitt-5', number: '05', sheet: 'schnitt', label: 'Aufgabe 5', category: 'Fräsen', material: '11SMnPb30', title: 'Passleisten vorfräsen', subtitle: 'Mit vorgegebener spezifischer Schnittkraft', icon: 'mill', given: 'Für das Vorfräsen wurde die spezifische Schnittkraft bereits durch Versuche bestimmt. Die Schneide ist abgestumpft.', facts: ['k_c = 1890 N/mm²', 'v_c = 150 m/min', 'a_p = 4 mm', 'f_z = 0,1 mm', 'd = 100 mm', 'z = 8', 'a_e = 70 mm', 'η = 75 %'], steps: [
+  s('a', 'Spanungsquerschnitt', 'Verwende den Vorschub je Schneide.', [f('A', 'Spanungsquerschnitt je Schneide', 'A', 'area', () => 4 * .1)], [crossHints[0], hint('Die gegebenen Größen', 'Schnitttiefe und Vorschub je Schneide bestimmen den hier verwendeten Querschnitt.'), hint('Den Querschnitt berechnen', 'Achte beim Produkt auf die Flächeneinheit.', 'A = a_p · f_z')]),
+  s('b', 'Schnittkraft je Schneide', 'Die spezifische Schnittkraft ist in der Aufgabe gegeben.', [...factors(false), f('Fc', 'Schnittkraft je Schneide', 'F_c', 'force', g => g('A') * 1890 * g('cw') * g('cs'))], [forceHints[0], hint('Was ist schon gegeben?', 'k_c ist bereits in der Aufgabenstellung angegeben. Schlage nur die benötigten Korrekturfaktoren nach.'), forceHints[2]]),
+  s('c', 'Schneiden im Eingriff', 'Bestimme den Eingriffswinkel und die mittlere Schneidenzahl.', [f('phi', 'Eingriffswinkel', 'φ', 'angle', () => 87, { alternatives: [88.854], readTolerance: 1 }), f('ze', 'Mittlere Schneidenzahl im Eingriff', 'z_e', 'count', g => 8 * g('phi') / 360)], cutterHints),
+  s('d', 'Schnittleistung', 'Die Kraft je Schneide allein reicht für diesen Schritt nicht aus.', [f('vms', 'Schnittgeschwindigkeit in m/s', 'v_c', 'speedSI', () => 150 / 60), f('Pc', 'Schnittleistung', 'P_c', 'power', g => g('ze') * g('Fc') * g('vms') / 1000)], [cutterHints[0], powerHints[1], hint('Die Schneidenzahl einbeziehen', 'Verwende deine mittlere Schneidenzahl im Eingriff und deine Kraft je Schneide.', 'P_c = z_e · F_c · v_c')]),
+  s('e', 'Antriebsleistung', 'Berücksichtige die Verluste des Antriebs.', [f('eta', 'Wirkungsgrad', 'η', 'efficiency', () => .75, { exact: true }), f('P1', 'Antriebsleistung', 'P₁', 'power', g => g('Pc') / g('eta'))], driveHints)
+ ]},
+ { id: 'schnitt-6', number: '06', sheet: 'schnitt', label: 'Aufgabe 6', category: 'Bohren', material: 'GJL-150', title: 'Kernloch bohren', subtitle: 'Größen je Hauptschneide bestimmen', icon: 'drill', given: 'Die Gewindebohrungen in der Grundplatte werden mit einem HSS-Bohrer vorbereitet. Verwende den Bohrerdurchmesser aus der Zeichnung.', facts: ['v_c = 22 m/min', 'f = 0,4 mm/U', 'd = 14 mm', 'σ = 118°', 'η = 80 %'], steps: drillSteps(false) },
+ { id: 'schnitt-7', number: '07', sheet: 'schnitt', label: 'Aufgabe 7', category: 'Bohren', material: '42CrMo4', title: 'Bohrung aufbohren', subtitle: 'Den vorhandenen Durchmesser beachten', icon: 'drill', given: 'Die vorhandene Bohrung wird mit abgestumpfter HSS-Schneide aufgebohrt. Rechne die Leistung mit dem vereinbarten Unterrichtsansatz wie beim Vollbohren und der angegebenen Schnittgeschwindigkeit.', facts: ['v_c = 18 m/min', 'f = 0,4 mm/U', 'd₁ = 8 mm', 'd = 20 mm', 'σ = 118°', 'η = 75 %'], steps: drillSteps(true) },
+ { id: 'volumen-1', number: '01', sheet: 'volumen', label: 'Aufgabe 1', category: 'Zeitspanungsvolumen', material: 'E295', title: 'Volumen beim Drehen', subtitle: 'Von der Drehzahl zum abgetragenen Volumen', icon: 'volume', given: 'Eine Welle wird längsgedreht. Bestimme Drehzahl, Zeitspanungsvolumen und das insgesamt abgetragene Volumen.', facts: ['v_c = 180 m/min', 'f = 0,25 mm/U', 'a_p = 3 mm', 'd = 60 mm', 't = 5 min'], steps: [
+  s('a', 'Drehzahl', 'Beachte Meter und Millimeter.', [f('n', 'Drehzahl', 'n', 'rpm', () => 180000 / (Math.PI * 60))], rpmHints),
+  s('b', 'Zeitspanungsvolumen', 'Gesucht ist das abgetragene Volumen je Zeit.', [f('Q', 'Zeitspanungsvolumen', 'Q', 'flow', () => 3 * .25 * 180)], [hint('Ein Volumen je Zeit', 'Welche Größen beschreiben beim Drehen den Spanungsquerschnitt und die Schnittbewegung?'), hint('Die Einheiten mitführen', 'Suche im Tabellenbuch unter „Zeitspanungsvolumen“. Achte darauf, ob deine Formel mm³/min oder cm³/min liefert.'), hint('Der Zusammenhang', 'Führe die Einheiten auf deinem Blatt mit. Rechne Meter und Millimeter passend um.', 'Q = A · v_c     A = a_p · f')]),
+  s('c', 'Abgetragenes Volumen', 'Nutze dein Zeitspanungsvolumen aus dem vorherigen Schritt.', [f('V', 'Insgesamt abgetragenes Volumen', 'V', 'volume', g => g('Q') * 5)], [hint('Von je Minute zur gesamten Zeit', 'Was beschreibt dein Zeitspanungsvolumen? Was ist zusätzlich über die Bearbeitungsdauer bekannt?'), hint('Passende Zeiteinheiten', 'Die Zeiteinheit von Q und die Einheit der Bearbeitungszeit müssen zusammenpassen.'), hint('Das gesamte Volumen', 'Multipliziere auf deinem Blatt und prüfe, welche Einheit sich kürzt.', 'V = Q · t')])
+ ]},
+ { id: 'volumen-2', number: '02', sheet: 'volumen', label: 'Aufgabe 2', category: 'Zeitspanungsvolumen', material: 'S235JR', title: 'Volumen beim Fräsen', subtitle: 'Schnitt- und Vorschubgeschwindigkeit unterscheiden', icon: 'volume', given: 'Eine Grundplatte wird mit einem Walzenstirnfräser bearbeitet. Bestimme Geschwindigkeiten, Zeitspanungsvolumen und Gesamtvolumen.', facts: ['d = 80 mm', 'z = 6', 'n = 600 min⁻¹', 'f_z = 0,1 mm', 'a_p = 4 mm', 'a_e = 25 mm', 't = 3 min'], steps: [
+  s('a', 'Die Geschwindigkeiten', 'Unterscheide die Schnittbewegung vom Vorschub.', [f('vc', 'Schnittgeschwindigkeit', 'v_c', 'speed', () => Math.PI * 80 * 600 / 1000), f('vf', 'Vorschubgeschwindigkeit', 'v_f', 'feed', () => .1 * 6 * 600)], [hint('Zwei verschiedene Bewegungen', 'Welche Größen beschreiben die Bewegung am Fräserumfang? Welche Größen bestimmen den Vorschub je Minute?'), hint('Den Vorschub je Schneide beachten', 'Für die Vorschubgeschwindigkeit benötigst du zusätzlich zur Drehzahl die Schneidenzahl.'), hint('Die Größen zuordnen', 'Beachte bei der Schnittgeschwindigkeit die Umrechnung von Millimeter in Meter.', 'v_c = π · d · n / 1000     v_f = f_z · z · n')]),
+  s('b', 'Zeitspanungsvolumen', 'Nutze die Vorschubgeschwindigkeit.', [f('Q', 'Zeitspanungsvolumen', 'Q', 'flow', g => 4 * 25 * g('vf') / 1000)], [hint('Den abgetragenen Bereich beschreiben', 'Welche Fläche wird mit dem Vorschub durchlaufen?'), hint('Die richtige Geschwindigkeit', 'Verwende für diesen Ansatz die Vorschubgeschwindigkeit. Prüfe anschließend die Volumeneinheit.'), hint('Den Zusammenhang nutzen', 'Mit Längen in mm und Vorschub in mm/min erhältst du zunächst mm³/min. Prüfe deine gewählte Ausgabeeinheit.', 'Q = a_p · a_e · v_f')]),
+  s('c', 'Abgetragenes Volumen', 'Verwende dein Ergebnis für das Zeitspanungsvolumen.', [f('V', 'Insgesamt abgetragenes Volumen', 'V', 'volume', g => g('Q') * 3)], [hint('Die gesamte Bearbeitungsdauer', 'Verknüpfe dein Zeitspanungsvolumen mit der angegebenen Bearbeitungszeit.'), hint('Einheiten prüfen', 'Die Zeiteinheiten müssen zusammenpassen. Übrig bleiben muss eine Volumeneinheit.'), hint('Auf dem Blatt weiterrechnen', 'Rechne mit deinem eigenen Zwischenwert weiter.', 'V = Q · t')])
+ ]}
+];
+
+const unitGroups = {
+ lengthSmall: [['mm', 1], ['cm', 10], ['m', 1000]], length: [['mm', 1], ['cm', 10], ['m', 1000]],
+ area: [['mm²', 1], ['cm²', 100]], specific: [['N/mm²', 1], ['N/cm²', .01]],
+ ratio: [['ohne Einheit', 1]], efficiency: [['als Dezimalzahl', 1], ['%', .01]],
+ force: [['N', 1], ['kN', 1000]], power: [['kW', 1], ['W', .001]],
+ speedSI: [['m/s', 1]], speed: [['m/min', 1], ['m/s', 60]], feed: [['mm/min', 1], ['m/min', 1000]],
+ count: [['Schneiden', 1]], angle: [['°', 1]], rpm: [['min⁻¹', 1], ['s⁻¹', 60]],
+ flow: [['cm³/min', 1], ['mm³/min', .001], ['cm³/s', 60]], volume: [['cm³', 1], ['mm³', .001], ['dm³', 1000]]
+};
+
+
+
+function parseNumber(raw) {
+ let value = String(raw ?? '').trim().replace(/[\s\u00a0\u202f]/g, '').replace(/−/g, '-');
+ if (value.includes(',')) value = value.replace(/\./g, '').replace(',', '.');
+ if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value)) return null;
+ const n = Number(value);
+ return Number.isFinite(n) ? n : null;
+}
+
+function getFields(task) { return task.steps.flatMap(step => step.fields); }
+
+function readEntry(field, entry) {
+ if (field.kind === 'choice') return entry?.raw || null;
+ const n = parseNumber(entry?.raw);
+ const units = unitGroups[field.kind];
+ const index = Number(entry?.unit ?? 0);
+ if (n === null || n <= 0 || !Number.isInteger(index) || !units?.[index]) return null;
+ return n * units[index][1];
+}
+
+const roundSteps = {
+ lengthSmall: [.001, .01, .1], length: [.1, 1, 10], area: [.001, .01, .1, 1],
+ specific: [1, 10, 100, 1000], ratio: [.001, .01, .1], efficiency: [],
+ force: [1, 10, 100, 1000], power: [.001, .01, .1, 1], speedSI: [.001, .01, .1, 1],
+ speed: [.01, .1, 1, 10], feed: [.1, 1, 10], count: [.01, .1, 1], angle: [.1, 1, 10],
+ rpm: [.1, 1, 10, 100], flow: [.01, .1, 1, 10, 100], volume: [.01, .1, 1, 10, 100]
+};
+
+function matchValue(field, actual, targets) {
+ if (field.kind === 'choice') return targets.includes(actual) ? 'correct' : 'wrong';
+ if (actual === null || !(actual > 0)) return 'invalid';
+ for (const target of targets) {
+  if (!(target > 0) || !Number.isFinite(target)) continue;
+  if (Math.abs(actual - target) <= Math.max(1e-7, Math.abs(target) * (field.exact ? .00001 : .003))) return 'correct';
+  if (field.exact) continue;
+  if (field.readTolerance && Math.abs(actual - target) <= field.readTolerance) return 'rounded';
+  for (const quantum of roundSteps[field.kind] || []) {
+   const rounded = Math.round((target + Number.EPSILON) / quantum) * quantum;
+   // Rounding may be coarse, but must produce an actual plausible rounded value.
+   // Prevent tiny positive values from being accepted by rounding to zero.
+   if (rounded > 0 && Math.abs(actual - rounded) <= Math.max(1e-7, quantum * .0001)) return 'rounded';
+  }
+ }
+ return 'wrong';
+}
+
+function evaluate(task, entries = {}) {
+ const fields = getFields(task), byId = new Map(fields.map(field => [field.id, field]));
+ const canonical = {}, values = {}, results = {}, visiting = new Set();
+ const reference = id => {
+  if (id in canonical) return canonical[id];
+  if (!byId.has(id)) throw new Error('Unknown field: ' + id);
+  if (visiting.has(id)) throw new Error('Circular field dependency');
+  visiting.add(id); canonical[id] = byId.get(id).expected(reference); visiting.delete(id);
+  return canonical[id];
+ };
+ const compute = id => {
+  if (results[id]) return results[id];
+  const field = byId.get(id), entry = entries[id];
+  const dependencies = [];
+  const ownReference = field.expected(dep => {
+   const previous = compute(dep);
+   dependencies.push(previous);
+   const typed = readEntry(byId.get(dep), entries[dep]);
+   // Use students' actual intermediate values, including a wrong predecessor,
+   // so correct subsequent arithmetic can be recognized without endorsing it.
+   return typed === null ? reference(dep) : typed;
+  });
+  const actual = readEntry(field, entry);
+  const targets = [ownReference, ...(field.alternatives || [])];
+  let status = !entry?.raw?.trim() ? 'empty' : matchValue(field, actual, targets);
+  const dependencyWrong = dependencies.some(r => ['wrong', 'invalid', 'followup'].includes(r.status));
+  if (['correct', 'rounded'].includes(status) && dependencyWrong) status = 'followup';
+  values[id] = ownReference;
+  results[id] = { status, dependencyMissing: dependencies.some(r => r.status === 'empty') };
+  return results[id];
+ };
+ fields.forEach(field => { reference(field.id); compute(field.id); });
+ return results;
+}
+
+function taskProgress(task, entries = {}) {
+ const results = evaluate(task, entries);
+ const complete = task.steps.filter(step => step.fields.every(field => entries[field.id]?.checked === true && ['correct', 'rounded'].includes(results[field.id].status))).length;
+ return { complete, total: task.steps.length, results };
+}
+
+function feedback(field, result) {
+ const status = result.status;
+ if (status === 'correct') return { tone: 'success', text: 'Richtig. Das passt.' };
+ if (status === 'rounded') return { tone: 'success', text: 'Richtig. Das passt mit deiner Rundung.' };
+ if (status === 'followup') return { tone: 'notice', text: 'Mit deinem Zwischenwert richtig gerechnet. Prüfe noch den vorherigen Schritt.' };
+ if (status === 'empty') return { tone: 'neutral', text: 'Trage hier deinen eigenen Wert ein.' };
+ if (status === 'invalid') return { tone: 'notice', text: 'Prüfe die Eingabe. Verwende eine positive Zahl und eine passende Einheit.' };
+ if (field.kind === 'choice') return { tone: 'notice', text: 'Vergleiche deine beiden Rechenwege noch einmal.' };
+ if (field.table) return { tone: 'notice', text: 'Schau im Tabellenbuch noch einmal nach. Prüfe Werkstoffzeile und Spaltenüberschrift.' };
+ if (field.kind === 'efficiency') return { tone: 'notice', text: 'Prüfe den Wirkungsgrad und ob du Prozent oder eine Dezimalzahl ausgewählt hast.' };
+ if (field.kind === 'power') return { tone: 'notice', text: 'Prüfe deinen Ansatz und die Leistungseinheit. Schau dir bei Bedarf den Hinweis zur Geschwindigkeit an.' };
+ if (field.kind === 'speedSI' || field.kind === 'speed' || field.kind === 'feed') return { tone: 'notice', text: 'Prüfe die Einheiten und die verwendete Geschwindigkeit. Achte auf Minuten, Sekunden, Meter und Millimeter.' };
+ if (['volume', 'flow'].includes(field.kind)) return { tone: 'notice', text: 'Prüfe die Volumen- und Zeiteinheiten sowie deinen vorherigen Zwischenwert.' };
+ if (field.kind === 'count' || field.kind === 'angle') return { tone: 'notice', text: 'Schau dir Zeichnung und Eingriff noch einmal an. Prüfe auch deinen abgelesenen Winkel.' };
+ return { tone: 'notice', text: result.dependencyMissing ? 'Prüfe deinen Ansatz und die Einheit. Falls du früh gerundet hast, trage auch deinen vorherigen Zwischenwert ein.' : 'Schau dir deinen Ansatz und die Einheit noch einmal an. Nutze bei Bedarf einen Hinweis.' };
+}
+
+
+// Native MathML keeps fractions and powers readable without an external library.
+const escapeMath = text => String(text).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const subDigits = '₀₁₂₃₄₅₆₇₈₉';
+const normalizeSymbol = value => value.replace(/([A-Za-z])([₀-₉]+)/g, (_,base,digits) => base+'_'+[...digits].map(d => subDigits.indexOf(d)).join(''));
+const mi = text => `<mi>${escapeMath(text)}</mi>`;
+const mn = text => `<mn>${escapeMath(text)}</mn>`;
+const mo = text => `<mo>${escapeMath(text)}</mo>`;
+const row = (...parts) => `<mrow>${parts.join('')}</mrow>`;
+const symbol = text => {
+ const [base,index] = normalizeSymbol(text).split('_');
+ return index === undefined ? mi(base) : `<msub>${mi(base)}<mtext>${escapeMath(index)}</mtext></msub>`;
+};
+const product = (...parts) => row(...parts.flatMap((part,index) => index ? [mo('·'),part] : [part]));
+const fraction = (top,bottom) => `<mfrac>${top}${bottom}</mfrac>`;
+const power = (base,exponent) => `<msup>${base}${exponent}</msup>`;
+const sum = (...parts) => row(...parts.flatMap((part,index) => index ? [mo('+'),part] : [part]));
+const sine = (argument,parentheses = false) => row('<mi mathvariant="normal">sin</mi><mspace width="0.16em"/>',...(parentheses ? [mo('('),argument,mo(')')] : [argument]));
+const equation = (lhs,rhs,operator = '=') => row(symbol(lhs),mo(operator),rhs);
+const key = text => text.replace(/\s/g,'');
+const definitions = new Map();
+const define = (source,label,rhs,lhs = source.split(/[=≈]/)[0].trim(),operator = '=') => definitions.set(key(source),{label,markup:equation(lhs,rhs,operator)});
+
+define('A = a_p · f','Spanungsquerschnitt',product(symbol('a_p'),symbol('f')));
+define('h = f · sin κ','Spanungsdicke',product(symbol('f'),sine(symbol('κ'))));
+define('k_c = k_c1.1 / h^m_c','Spezifische Schnittkraft',fraction(symbol('k_c1.1'),power(symbol('h'),symbol('m_c'))));
+define('F_c = A · k_c','Schnittkraft',product(symbol('A'),symbol('k_c')));
+define('P_c = F_c · v_c','Schnittleistung',product(symbol('F_c'),symbol('v_c')));
+define('P₁ = P_c / η','Antriebsleistung',fraction(symbol('P_c'),symbol('η')));
+define('d_m = (d_a + d_i) / 2','Mittlerer Durchmesser',fraction(sum(symbol('d_a'),symbol('d_i')),mn('2')));
+define('n = (v_c · 1000) / (π · d_m)','Drehzahl',fraction(product(symbol('v_c'),mn('1000')),product(symbol('π'),symbol('d_m'))));
+define('v_c,a = π · d_a · n / 1000','Schnittgeschwindigkeit außen',fraction(product(symbol('π'),symbol('d_a'),symbol('n')),mn('1000')));
+define('h ≈ f_z','Spanungsdicke',symbol('f_z'),'h','≈');
+define('A = a_p · f_z','Spanungsquerschnitt',product(symbol('a_p'),symbol('f_z')));
+define('F_c = A · k_c · C_W · C_S','Schnittkraft',product(symbol('A'),symbol('k_c'),symbol('C_W'),symbol('C_S')));
+define('z_e = z · φ / 360°','Mittlere Schneidenzahl im Eingriff',fraction(product(symbol('z'),symbol('φ')),row(mn('360'),mo('°'))));
+define('P_c = z_e · F_c · v_c','Schnittleistung',product(symbol('z_e'),symbol('F_c'),symbol('v_c')));
+define('A = d · f / 4','Spanungsquerschnitt je Hauptschneide',fraction(product(symbol('d'),symbol('f')),mn('4')));
+define('h = (f / 2) · sin(σ / 2)','Spanungsdicke',product(fraction(symbol('f'),mn('2')),sine(fraction(symbol('σ'),mn('2')),true)));
+define('A = (d − d₁) · f / 4','Spanungsquerschnitt je Hauptschneide',fraction(product(row(mo('('),symbol('d'),mo('−'),symbol('d₁'),mo(')')),symbol('f')),mn('4')));
+define('n = (v_c · 1000) / (π · d)','Drehzahl',fraction(product(symbol('v_c'),mn('1000')),product(symbol('π'),symbol('d'))));
+define('Q = A · v_c','Zeitspanungsvolumen',product(symbol('A'),symbol('v_c')));
+define('V = Q · t','Abgetragenes Volumen',product(symbol('Q'),symbol('t')));
+define('v_c = π · d · n / 1000','Schnittgeschwindigkeit',fraction(product(symbol('π'),symbol('d'),symbol('n')),mn('1000')));
+define('v_f = f_z · z · n','Vorschubgeschwindigkeit',product(symbol('f_z'),symbol('z'),symbol('n')));
+define('Q = a_p · a_e · v_f','Zeitspanungsvolumen',product(symbol('a_p'),symbol('a_e'),symbol('v_f')));
+
+function mathML(markup,display = 'inline') {
+ return `<math xmlns="http://www.w3.org/1998/Math/MathML" display="${display}">${markup}</math>`;
+}
+
+function formatInlineText(text) {
+ // Only replace symbolic tokens; prose and given values stay escaped plain text.
+ const tokens = /[A-Za-z]_[A-Za-z0-9]+(?:[.,][A-Za-z0-9]+)*|[A-Za-z][₀-₉]+/g;
+ let html = '', end = 0;
+ for (const match of String(text).matchAll(tokens)) {
+  html += escapeMath(String(text).slice(end,match.index));
+  html += mathML(symbol(match[0])); end = match.index+match[0].length;
+ }
+ return html+escapeMath(String(text).slice(end));
+}
+
+function formulaLines(source) {
+ return String(source).trim().split(/\s{2,}|\n+/).filter(Boolean);
+}
+
+function hasFormulaDefinition(source) { return definitions.has(key(source)); }
+
+function renderFormulaStack(source) {
+ return `<div class="formula-stack">${formulaLines(source).map(line => {
+  const item = definitions.get(key(line));
+  if (!item) return `<div class="formula-equation"><div class="equation-math">${formatInlineText(line)}</div></div>`;
+  return `<div class="formula-equation"><span class="equation-label">${escapeMath(item.label)}</span><div class="equation-math">${mathML(item.markup,'block')}</div></div>`;
+ }).join('')}</div>`;
+}
+
+
+
+
+
+const STORE = 'rechenlotse-v1';
+const $ = selector => document.querySelector(selector);
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]);
+const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>';
+const book = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 5c4-1 7 0 9 2 2-2 5-3 9-2v14c-4-1-7 0-9 2-2-2-5-3-9-2V5Zm9 2v14"/></svg>';
+const bulb = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 16c0-3-3-3-3-7a7 7 0 0 1 14 0c0 4-3 4-3 7v2H8v-2Zm1 5h6M9 9l3 3 3-3m-3 3v6"/></svg>';
+const checkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+const icons = {
+ turn:'<path d="M3 7h24v10H3zM7 4v16m16-16v16M14 23l5-7 4 7m-9 0h9"/>',
+ mill:'<circle cx="15" cy="15" r="8"/><circle cx="15" cy="15" r="3"/><path d="M15 3v4m0 16v4M3 15h4m16 0h4M6.5 6.5l3 3m11 11 3 3m-17 0 3-3m11-11 3-3"/>',
+ drill:'<path d="M10 3h10v6l-2 3v10l-3 5-3-5V12l-2-3V3Zm2 9 6 4m-6 0 6 4M7 23H3V13h4m16 10h4V13h-4"/>',
+ volume:'<path d="m5 9 10-5 10 5-10 5L5 9Zm0 0v13l10 5 10-5V9M15 14v13M5 17l10 5 10-5"/>'
+};
+const symbolIcon = name => `<svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.turn}</svg>`;
+const math = formatInlineText;
+let state = { entries:{}, hints:{}, filter:'Alle', last:'' };
+let storageAvailable = true, shownStorageNotice = false;
+try {
+ const restored = JSON.parse(localStorage.getItem(STORE) || 'null');
+ if (restored && typeof restored === 'object') {
+  state.entries = restored.entries && typeof restored.entries === 'object' ? restored.entries : {};
+  state.hints = restored.hints && typeof restored.hints === 'object' ? restored.hints : {};
+  state.last = typeof restored.last === 'string' ? restored.last : '';
+ }
+} catch { storageAvailable = false; }
+
+function toast(text) {
+ $('#toast').textContent = text; $('#toast').classList.add('show');
+ clearTimeout(toast.timer); toast.timer = setTimeout(() => $('#toast').classList.remove('show'), 4200);
+}
+function persist() {
+ try { localStorage.setItem(STORE, JSON.stringify({ entries:state.entries, hints:state.hints, last:state.last })); storageAvailable = true; }
+ catch { storageAvailable = false; if (!shownStorageNotice) { shownStorageNotice = true; toast('Dein Browser kann den Arbeitsstand gerade nicht dauerhaft speichern. Du kannst trotzdem weiterüben.'); } }
+ $('#save-status').innerHTML = '<span></span>' + (storageAvailable ? 'Auf diesem Gerät gespeichert' : 'Arbeitsstand für diese Sitzung');
+}
+function entries(task) {
+ if (!state.entries[task.id] || typeof state.entries[task.id] !== 'object') state.entries[task.id] = {};
+ return state.entries[task.id];
+}
+function route() {
+ const parts = location.hash.replace(/^#\/?/, '').split('/');
+ const task = parts[0] === 'aufgabe' ? tasks.find(t => t.id === parts[1]) : null;
+ const index = task ? Math.max(0, task.steps.findIndex(s => s.id === parts[2])) : 0;
+ return { task, index };
+}
+function taskHref(task, index = 0) { return '#/aufgabe/' + task.id + '/' + task.steps[index].id; }
+function stepLabel(step) { return step.id.length === 1 ? step.id : step.id[0] + ' · ' + ({ c1:'Kraft',c2:'Leistung',b1:'Kennwerte',b2:'Kraft',b3:'Leistung' }[step.id] || step.id.slice(1)); }
+function stepDone(task, step, results) { return step.fields.every(field => entries(task)[field.id]?.checked === true && ['correct','rounded'].includes(results[field.id].status)); }
+
+function renderHome() {
+ const categories = ['Alle','Drehen','Fräsen','Bohren','Zeitspanungsvolumen'];
+ const visible = tasks.filter(t => state.filter === 'Alle' || t.category === state.filter);
+ const lastTask = tasks.find(t => state.last.startsWith('#/aufgabe/' + t.id + '/'));
+ $('#main').innerHTML = `
+  <section class="hero" aria-labelledby="hero-title">
+   <div class="hero-copy"><div class="eyebrow"><span class="small-square"></span> SCHRITT FÜR SCHRITT WEITER</div>
+    <h1 id="hero-title">Du rechnest.<br>Dein Lotse <em>hilft.</em></h1>
+    <p class="hero-description">Manchmal fehlt nur der nächste Gedanke. Finde einen Hinweis, schlage nach und prüfe deinen eigenen Rechenweg.</p>
+    <div class="hero-actions">${lastTask ? `<a class="button button-primary" href="${esc(state.last)}">Weiterüben ${arrow}</a>` : '<a class="button button-primary" href="#aufgaben" id="discover">Aufgaben entdecken '+arrow+'</a>'}<button type="button" class="text-button text-link" data-info="how">So funktioniert’s <span aria-hidden="true">↗</span></button></div>
+    <div class="tools-note">${book}<span>Dein Übungsblatt, Tabellenbuch & Taschenrechner</span></div>
+   </div>
+   <div class="hero-art" aria-hidden="true"><span class="art-kicker eyebrow">DREHEN · FRÄSEN · BOHREN</span><span class="art-no">Ø</span>
+    <div class="art-object"><svg viewBox="0 0 300 300" fill="none"><circle cx="150" cy="150" r="125" stroke="#799766" stroke-dasharray="3 7"/><circle cx="150" cy="150" r="100" fill="#f4f6e8" stroke="#749063"/><path d="M150 41v218M41 150h218" stroke="#a4b58c" stroke-dasharray="5 5"/><circle cx="150" cy="150" r="71" fill="#1d5144"/><circle cx="150" cy="150" r="50" stroke="#91ab70"/><circle cx="150" cy="150" r="26" fill="#d9e8bb"/><path d="m146 102 7-15 7 15m41 42 15 7-15 7m-48 43-7 15-7-15m-37-55-15-7 15-7" fill="#d9e8bb"/><path d="m201 194 33 7-22 30-12-24z" fill="#ce794d" stroke="#864b2d"/><path d="m214 213 32 28" stroke="#864b2d"/><path d="M60 260h98m-98-5v10m98-10v10" stroke="#839b6b"/></svg></div>
+    <div class="art-label top"><span>ƒ</span> Den Ansatz finden</div><div class="art-label bottom"><span>✓</span> Den eigenen Weg prüfen</div><span class="art-caption">MITDENKEN. NACHSCHLAGEN. WEITERKOMMEN.</span>
+   </div>
+  </section>
+  <section class="tasks-section" id="aufgaben" aria-labelledby="tasks-title"><div class="section-title-row"><div><span class="eyebrow">DEIN ÜBUNGSBLATT</span><h2 id="tasks-title">Woran arbeitest du?</h2></div><p class="section-note">Wähle deine Aufgabe. Du bestimmst das Tempo.</p></div>
+   <div class="filters" role="group" aria-label="Aufgaben nach Thema filtern">${categories.map(c => `<button class="filter ${state.filter === c ? 'active':''}" type="button" data-filter="${esc(c)}" aria-pressed="${state.filter === c}">${esc(c)}<span class="filter-count">${c === 'Alle' ? tasks.length : tasks.filter(t => t.category === c).length}</span></button>`).join('')}</div>
+   <div class="task-grid">${visible.map(task => {
+    const p = taskProgress(task, entries(task));
+    return `<article class="task-card"><div class="card-top"><div class="task-symbol">${symbolIcon(task.icon)}</div><div class="card-identity"><span class="eyebrow">${task.sheet === 'schnitt' ? 'SCHNITTBERECHNUNGEN' : 'ZEITSPANUNGSVOLUMEN'}</span><strong>${task.label}</strong></div></div><h3>${task.title}</h3><p>${task.subtitle}</p><span class="card-material">${esc(task.material)}</span><div class="card-bottom"><span class="card-progress">${p.complete === p.total ? '✓ Alle Schritte geprüft' : p.complete+' / '+p.total+' Schritte geprüft'}</span><a href="${taskHref(task)}" class="card-link" aria-label="${esc(task.label+' '+task.title+' öffnen')}">Aufgabe öffnen <span class="tiny-arrow" aria-hidden="true">↗</span></a></div></article>`;
+   }).join('')}</div>
+  </section>`;
+}
+
+function resultHTML(field, result) {
+ const msg = feedback(field, result);
+ return `<div class="field-result ${msg.tone}" id="result-${field.id}"><span class="result-icon" aria-hidden="true">${msg.tone === 'success' ? '✓' : msg.tone === 'notice' ? '↻' : '·'}</span><span>${esc(msg.text)}</span></div>`;
+}
+function fieldHTML(task, field, results) {
+ const entry = entries(task)[field.id] || {}, result = results[field.id];
+ const show = entry.checked === true;
+ const msg = show ? feedback(field, result) : null;
+ const resultClass = show ? ' is-' + msg.tone : '';
+ let control;
+ if (field.kind === 'choice') control = `<select class="choice-select" id="input-${field.id}" name="${field.id}" data-field="${field.id}" aria-describedby="${show ? 'result-'+field.id : 'form-note'}"><option value="">Deine Einschätzung wählen</option>${field.options.map(([v,label]) => `<option value="${esc(v)}" ${entry.raw === v ? 'selected':''}>${esc(label)}</option>`).join('')}</select>`;
+ else control = `<div class="input-group"><input class="value-input" type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false" id="input-${field.id}" name="${field.id}" data-field="${field.id}" value="${esc(entry.raw)}" placeholder="Dein Wert" aria-describedby="${show ? 'result-'+field.id : 'form-note'}" ${show && ['wrong','invalid'].includes(result.status) ? 'aria-invalid="true"':''}><select class="unit-select" aria-label="Einheit für ${esc(field.label)}" data-unit="${field.id}">${unitGroups[field.kind].map(([label],i) => `<option value="${i}" ${Number(entry.unit || 0) === i ? 'selected':''}>${esc(label)}</option>`).join('')}</select></div>`;
+ return `<div class="field-row${resultClass}" data-row="${field.id}"><div class="field-label"><label for="input-${field.id}">${esc(field.label)}</label><span class="field-symbol" aria-hidden="true">${math(field.symbol)}</span></div>${control}${show ? resultHTML(field, result) : ''}</div>`;
+}
+function hintsHTML(task, step) {
+ const level = Math.min(3, Math.max(0, Number(state.hints[task.id + ':' + step.id]) || 0));
+ return `<div class="side-heading">${bulb}Ein Gedanke zum Weiterkommen</div>${level === 0 ? '<p class="hint-intro">Du steckst fest? Öffne einen kleinen Hinweis. Wenn du mehr brauchst, gehst du einen Schritt weiter.</p>' : ''}<div class="hint-items" aria-live="polite">${step.hints.slice(0,level).map((h,i) => `<section class="hint-item"><span class="hint-step">Tipp ${i+1} von 3</span><h3>${esc(h.title)}</h3><p>${math(h.text)}</p>${h.formula ? renderFormulaStack(h.formula):''}</section>`).join('')}</div>${level < 3 ? `<button class="button button-secondary hint-button" type="button" id="hint-button">${level === 0 ? 'Ich brauche einen Tipp' : 'Noch einen Hinweis'} ${arrow}</button>` : '<p class="teacher-note">Du kommst noch nicht weiter? Zeig deiner Lehrkraft deinen bisherigen Rechenweg.</p>'}<p class="student-note">Rechne auf deinem Blatt weiter. Du entscheidest, wie viel Hilfe du brauchst.</p>`;
+}
+function sidebarHTML(task) {
+ return `<aside class="work-sidebar" aria-label="Aufgabenübersicht"><a class="back-link" href="#"><span aria-hidden="true">←</span> Alle Aufgaben</a>${['schnitt','volumen'].map(sheet => `<div class="sidebar-label eyebrow">${sheet === 'schnitt' ? 'SCHNITTBERECHNUNGEN' : 'ZEITSPANUNGSVOLUMEN'}</div>${tasks.filter(t => t.sheet === sheet).map(t => {
+  const p = taskProgress(t, entries(t));
+  return `<a class="sidebar-task ${t.id === task.id ? 'active':''}" href="${taskHref(t)}" ${t.id === task.id ? 'aria-current="page"':''}><span class="sidebar-num">${t.number}</span><span><strong>${t.title}</strong><small>${t.material}</small></span>${p.complete === p.total ? '<span class="sidebar-check" aria-label="abgeschlossen">✓</span>':''}</a>`;
+ }).join('')}`).join('')}<div class="sidebar-note">${book}Leg dein Übungsblatt, dein Tabellenbuch und den Taschenrechner bereit.</div></aside>`;
+}
+function renderWork(task, index) {
+ const p = taskProgress(task, entries(task)), step = task.steps[index];
+ state.last = taskHref(task, index);
+ $('#main').innerHTML = `<div class="work-layout">${sidebarHTML(task)}<div class="work-main"><a class="back-link mobile-back" href="#">← Alle Aufgaben</a><div class="work-top"><div><div class="work-kicker">${task.sheet === 'schnitt' ? 'SCHNITTBERECHNUNGEN' : 'ZEITSPANUNGSVOLUMEN'} <span aria-hidden="true"> / </span> ${task.label.toUpperCase()}</div><h1>${task.title}</h1><p class="work-subtitle">${task.subtitle} · ${task.material}</p></div><div class="work-progress"><strong id="progress-count">${p.complete}<span aria-hidden="true"> / </span>${p.total}</strong><small>Schritte geprüft</small><div class="progress-line" role="progressbar" aria-label="Geprüfte Schritte dieser Aufgabe" aria-valuemin="0" aria-valuemax="${p.total}" aria-valuenow="${p.complete}"><span style="width:${p.complete/p.total*100}%"></span></div></div></div>
+   <details class="given"><summary>Aufgabedaten ansehen</summary><p>${esc(task.given)}</p><div class="fact-list">${task.facts.map(fact => `<span class="fact">${math(fact)}</span>`).join('')}</div></details>
+   <nav class="step-nav" aria-label="Teilaufgaben">${task.steps.map((item,i) => `<a class="step-tab ${index === i ? 'active':''} ${stepDone(task,item,p.results) ? 'done':''}" href="${taskHref(task,i)}" data-step="${item.id}" ${index === i ? 'aria-current="step"':''} aria-label="Teilaufgabe ${esc(stepLabel(item))}: ${esc(item.title)}"><span class="done-mark" aria-hidden="true">${stepDone(task,item,p.results) ? '✓':''}</span>${esc(stepLabel(item))}</a>`).join('')}</nav>
+   <section class="step-panel" aria-labelledby="step-title"><div class="step-head"><div class="eyebrow">TEILAUFGABE ${esc(step.id[0].toUpperCase())} <span aria-hidden="true"> · </span> DEIN RECHENWEG</div><h2 id="step-title">${esc(step.title)}</h2><p>${esc(step.description)}</p></div><div class="step-columns"><aside class="hint-side" id="hint-panel" aria-label="Hinweise">${hintsHTML(task,step)}</aside><div class="check-side"><div class="side-heading">${checkIcon}Deine Eingaben prüfen</div><form id="check-form" novalidate>${step.fields.map(field => fieldHTML(task,field,p.results)).join('')}<button type="submit" class="button button-primary check-button">Eingaben prüfen ${checkIcon}</button><p class="form-help" id="form-note">Komma oder Punkt für Dezimalstellen.<br>Tausender kannst du mit einem Leerzeichen trennen.</p><div class="form-summary" id="form-summary" role="status" hidden></div></form></div></div></section>
+   <div class="step-bottom"><span class="step-position">Schritt ${index+1} von ${task.steps.length}</span><div class="step-controls">${index > 0 ? `<a class="button button-plain" href="${taskHref(task,index-1)}">← Zurück</a>`:''}<a class="button button-secondary" id="next-step" href="${index+1 < task.steps.length ? taskHref(task,index+1) : '#'}">${index+1 < task.steps.length ? 'Nächster Schritt' : 'Zur Übersicht'} ${arrow}</a></div></div>
+   <div class="completion-note" id="completion-note" ${p.complete === p.total ? '' : 'hidden'}><strong>Alle Schritte dieser Aufgabe sind geprüft.</strong><br>Schau dir deinen Rechenweg auf dem Blatt noch einmal an. Kannst du erklären, warum du die Formeln so verwendet hast?</div>
+  </div></div>`;
+}
+
+function updateProgress(task) {
+ const p = taskProgress(task, entries(task));
+ $('#progress-count').innerHTML = `${p.complete}<span aria-hidden="true"> / </span>${p.total}`;
+ const bar = $('.progress-line'); bar.setAttribute('aria-valuenow',p.complete); bar.firstElementChild.style.width = p.complete/p.total*100+'%';
+ task.steps.forEach(step => {
+  const node = document.querySelector('[data-step="'+step.id+'"]'), done = stepDone(task,step,p.results);
+  node.classList.toggle('done', done); node.querySelector('.done-mark').textContent = done ? '✓':'';
+ });
+ $('#completion-note').hidden = p.complete !== p.total;
+ return p;
+}
+function handleEdit(event) {
+ const control = event.target, id = control.dataset.field || control.dataset.unit;
+ if (!id) return;
+ const { task, index } = route(); if (!task) return;
+ const data = entries(task), step = task.steps[index];
+ data[id] ||= { raw:'', unit:0 };
+ if (control.dataset.unit) data[id].unit = Number(control.value); else data[id].raw = control.value;
+ step.fields.forEach(field => { if (data[field.id]) data[field.id].checked = false; });
+ step.fields.forEach(field => {
+  const row = document.querySelector('[data-row="'+field.id+'"]');
+  row.classList.remove('is-success','is-notice','is-neutral'); row.querySelector('.field-result')?.remove();
+  const input = $('#input-'+field.id); input.removeAttribute('aria-invalid'); input.setAttribute('aria-describedby','form-note');
+ });
+ $('#form-summary').hidden = true; updateProgress(task); persist();
+}
+
+function openInfo(kind) {
+ const dialog = $('#info-dialog'), content = $('#dialog-content');
+ if (kind === 'reset') {
+  content.innerHTML = '<h2 id="dialog-title">Neu beginnen?</h2><p>Deine Eingaben, geöffneten Hinweise und Fortschritte werden auf diesem Gerät gelöscht. Danach kannst du wieder von vorne starten.</p><div class="dialog-actions"><button type="button" class="button button-plain" data-close>Weiterüben</button><button type="button" class="button button-primary" id="confirm-reset">Arbeitsstand löschen</button></div>';
+ } else if (kind === 'privacy') {
+  content.innerHTML = '<h2 id="dialog-title">Dein Arbeitsstand bleibt hier.</h2><p>Der Rechenlotse speichert deine Eingaben, geöffneten Hinweise und Fortschritte im Browser auf diesem Gerät. Du brauchst keinen Namen und keine Anmeldung.</p><p>Die Anwendung überträgt deine Eingaben nicht an eine Lehrkraft oder einen anderen Dienst. Auf einem gemeinsam genutzten Gerät kannst du deinen Arbeitsstand über „Neu beginnen“ löschen.</p><p>Wenn dein Browser die lokale Speicherung nicht erlaubt, kannst du trotzdem üben. Beim Schließen kann der Arbeitsstand dann verloren gehen.</p><div class="dialog-actions"><button type="button" class="button button-primary" data-close>Verstanden</button></div>';
+ } else {
+  content.innerHTML = '<h2 id="dialog-title">Dein nächster Schritt zählt.</h2><p>Du rechnest auf deinem Übungsblatt. Der Lotse hilft dir, wenn du einen Gedanken zum Weiterkommen brauchst.</p><ol class="how-list"><li><div><strong>Wähle deine Aufgabe.</strong>Die Nummern passen zu deinem Übungsblatt. Du kannst direkt zu einer Teilaufgabe springen.</div></li><li><div><strong>Rechne und schlage nach.</strong>Nutze Tabellenbuch und Taschenrechner. Öffne bei Bedarf einen Hinweis nach dem anderen.</div></li><li><div><strong>Prüfe deine Eingabe.</strong>Trage deinen Wert mit Einheit ein. Du bekommst eine Rückmeldung und bei Bedarf einen Prüfhinweis. Auch gerundete Zwischenwerte werden berücksichtigt.</div></li></ol><p>Wenn du früh gerundet hast, trage deine Zwischenwerte in den vorherigen Schritten ein. So kann der Lotse deinen Rechenweg berücksichtigen.</p><div class="dialog-actions"><button type="button" class="button button-primary" data-close>Los geht’s '+arrow+'</button></div>';
+ }
+ dialog.showModal();
+}
+
+document.addEventListener('input', handleEdit);
+document.addEventListener('change', event => { if (event.target.matches('select')) handleEdit(event); });
+document.addEventListener('submit', event => {
+ if (event.target.id !== 'check-form') return;
+ event.preventDefault(); const { task, index } = route(); if (!task) return;
+ const data = entries(task), step = task.steps[index];
+ step.fields.forEach(field => { data[field.id] ||= { raw:'', unit:0 }; data[field.id].checked = true; });
+ const p = taskProgress(task,data);
+ step.fields.forEach(field => {
+  const row = document.querySelector('[data-row="'+field.id+'"]'), msg = feedback(field,p.results[field.id]);
+  row.querySelector('.field-result')?.remove(); row.insertAdjacentHTML('beforeend',resultHTML(field,p.results[field.id]));
+  row.classList.remove('is-success','is-notice','is-neutral'); row.classList.add('is-'+msg.tone);
+  const input = $('#input-'+field.id); input.setAttribute('aria-describedby','result-'+field.id);
+  if (['wrong','invalid'].includes(p.results[field.id].status)) input.setAttribute('aria-invalid','true'); else input.removeAttribute('aria-invalid');
+ });
+ const good = stepDone(task,step,p.results), summary = $('#form-summary');
+ summary.hidden = false; summary.classList.toggle('notice',!good);
+ summary.textContent = good ? 'Das passt. Du kannst auf deinem Blatt weiterarbeiten.' : 'Schau dir die Hinweise bei deinen Eingaben an. Du kannst deinen Rechenweg jederzeit erneut prüfen.';
+ updateProgress(task); persist();
+});
+document.addEventListener('click', event => {
+ const target = event.target.closest('button,a'); if (!target) return;
+ if (target.id === 'discover') { event.preventDefault(); $('#aufgaben').scrollIntoView({ behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); }
+ if (target.dataset.filter) { state.filter = target.dataset.filter; const top = window.scrollY; renderHome(); window.scrollTo(0,top); document.querySelector('[data-filter="'+state.filter+'"]').focus({ preventScroll:true }); }
+ if (target.id === 'hint-button') {
+  const {task,index} = route(); const step = task.steps[index], key = task.id+':'+step.id;
+  state.hints[key] = Math.min(3, (Number(state.hints[key]) || 0)+1); $('#hint-panel').innerHTML = hintsHTML(task,step); persist();
+ }
+ if (target.dataset.info || target.id === 'help-button') openInfo('how');
+ if (target.id === 'privacy-button') openInfo('privacy');
+ if (target.id === 'reset-button') openInfo('reset');
+ if (target.matches('[data-close],.dialog-close')) $('#info-dialog').close();
+ if (target.id === 'confirm-reset') {
+  state = { entries:{}, hints:{}, filter:'Alle', last:'' }; persist(); $('#info-dialog').close();
+  if (location.hash) location.hash = ''; else renderHome(); toast('Dein Arbeitsstand wurde zurückgesetzt.');
+ }
+});
+$('#info-dialog').addEventListener('click', event => { if (event.target === event.currentTarget) { const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) event.currentTarget.close(); } });
+function render() {
+ const { task,index } = route();
+ if (task) { document.title = task.label+' · '+task.title+' | Rechenlotse'; renderWork(task,index); persist(); }
+ else { document.title = 'Rechenlotse · Dein Übungsbegleiter'; renderHome(); }
+}
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0,0); $('#main').focus({ preventScroll:true }); });
+render();
+if (Object.keys(state.entries).length && storageAvailable) $('#save-status').innerHTML = '<span></span>Auf diesem Gerät gespeichert';
+</script>
+</body>
+</html>
